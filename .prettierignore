@@ -1,0 +1,12 @@
+# dependencies
+node_modules
+dist
+build
+
+# misc
+*.log
+*.lock
+*.tmp
+
+# generated
+coverage

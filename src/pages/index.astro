@@ -1,0 +1,17 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { SystemOverview3D } from '../components/SystemOverview3D';
+import { MobilePortfolio } from '../components/MobilePortfolio';
+---
+
+<Layout title="Andrea Pallotta // Production & Software Engineer">
+  {/* Desktop 3D Orbiting Node Ring Overview (Hidden on Mobile) */}
+  <div class="hidden md:block">
+    <SystemOverview3D client:load />
+  </div>
+
+  {/* Mobile Static Portfolio (Hidden on Desktop) */}
+  <div class="md:hidden">
+    <MobilePortfolio client:load />
+  </div>
+</Layout>
