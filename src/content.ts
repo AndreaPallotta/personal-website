@@ -79,7 +79,7 @@ export const skills = {
 export const socials: LinkItem[] = [
     { label: 'LinkedIn', url: 'https://www.linkedin.com/in/andreapallotta9' },
     { label: 'GitHub', url: 'https://github.com/AndreaPallotta' },
-    { label: 'Subroutine', url: 'https://subroutine-cs.cc' },
+    { label: 'Subroutine CS', url: 'https://subroutine-cs.cc' },
     { label: 'Dot', url: 'https://dot.cards/apdev' },
     { label: 'TryHackMe', url: 'https://tryhackme.com/p/andreapallotta.d' },
 ];
@@ -93,14 +93,14 @@ export const contact = {
 export const projects: Project[] = [
     {
         id: 'subroutine',
-        title: 'subroutine',
-        summary: 'Interactive blog with computing-related articles, real-time audio-visual simulations, and multilingual code snippets.',
+        title: 'subroutine cs',
+        summary: 'Subroutine CS (subroutine-cs.cc) is an interactive computer science and systems blog covering algorithms, low-level systems, C++, and networking with audio-visual simulations.',
         tags: ['TypeScript', 'MDX', 'Astro', 'CSS', 'React', 'Web Audio API'],
         links: [
-            { label: 'Live Site', url: 'https://subroutine-cs.cc' },
+            { label: 'Subroutine CS (Live Site)', url: 'https://subroutine-cs.cc' },
             { label: 'GitHub', url: 'https://github.com/AndreaPallotta/subroutine' },
         ],
-        image: { src: '/assets/subroutine.svg', alt: 'Subroutine CS Playground' },
+        image: { src: '/assets/subroutine.svg', alt: 'Subroutine CS Blog' },
     },
     {
         id: 'strathub',
