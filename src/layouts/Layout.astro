@@ -1,18 +1,55 @@
 ---
 import '../styles/global.css';
-import { whoami } from '../content';
+import { whoami, socials } from '../content';
 
 interface Props {
   title?: string;
   description?: string;
+  gaMeasurementId?: string;
 }
 
+const envGaId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
+
 const {
-  title = `${whoami.name} // ${whoami.roleTitle}`,
+  title = whoami.name,
   description = whoami.tagline,
+  gaMeasurementId = envGaId || 'G-MZ658GKMXP',
 } = Astro.props;
 
-const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://andreapallotta.dev');
+const ogImageUrl = new URL('/assets/profile.jpg', canonicalURL).href;
+
+// JSON-LD Structured Data (Person & WebSite Schema)
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  'name': whoami.name,
+  'url': 'https://andreapallotta.dev',
+  'image': ogImageUrl,
+  'jobTitle': whoami.roleTitle,
+  'worksFor': {
+    '@type': 'Organization',
+    'name': whoami.company
+  },
+  'alumniOf': {
+    '@type': 'EducationalOrganization',
+    'name': 'Rochester Institute of Technology (RIT)'
+  },
+  'sameAs': socials.map(s => s.url),
+  'knowsAbout': ['Python', 'Software Engineering', 'Systems Optimization', 'TypeScript', 'C++', 'Cyber Security', 'Production Engineering']
+};
+
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  'name': 'Andrea Pallotta Portfolio',
+  'alternateName': ['Andrea Pallotta', 'andreapallotta.dev'],
+  'url': 'https://andreapallotta.dev',
+  'author': {
+    '@type': 'Person',
+    'name': whoami.name
+  }
+};
 ---
 
 <!DOCTYPE html>
@@ -22,20 +59,29 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta name="author" content={whoami.name} />
+    <meta name="keywords" content="Andrea Pallotta, Production Engineer, Software Engineer, Susquehanna, RIT, Python, TypeScript, C++, Systems Engineering, Philadelphia" />
+    <meta name="robots" content="index, follow" />
     <meta name="google-site-verification" content="IgVJkbm3AJx082nw3r3o7YVVUKbui3WcvRrzmwP6cz8" />
 
     <!-- SEO Canonical & Sitemap Links -->
     <link rel="canonical" href={canonicalURL} />
     <link rel="sitemap" href="/sitemap-index.xml" />
 
-    <!-- Open Graph & Social Cards -->
+    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Andrea Pallotta Portfolio" />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImageUrl} />
+
+    <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={canonicalURL} />
     <meta property="twitter:title" content={title} />
     <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={ogImageUrl} />
 
     <!-- Favicon Marks with Cache Busting v=2 -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
@@ -48,6 +94,25 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Schema.org JSON-LD Structured Data -->
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(personSchema)} />
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(websiteSchema)} />
+
+    <!-- Google Analytics (GA4) Tag -->
+    {gaMeasurementId && (
+      <>
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`}></script>
+        <script is:inline define:vars={{ gaMeasurementId }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', gaMeasurementId, {
+            send_page_view: true
+          });
+        </script>
+      </>
+    )}
   </head>
   <body class="min-h-screen font-sans antialiased overflow-x-hidden transition-colors duration-300">
     <slot />

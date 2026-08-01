@@ -6,7 +6,7 @@ import tailwind from '@astrojs/tailwind';
 export default defineConfig({
   integrations: [
     react(),
-    tailwind()
+    tailwind(),
   ],
   site: 'https://andreapallotta.dev',
   base: '/',
