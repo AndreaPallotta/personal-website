@@ -115,10 +115,10 @@ export const projects: Project[] = [
     {
         id: 'zyra',
         title: 'zyra',
-        summary: 'Lightweight, zero-dependency TypeScript & JavaScript event emitter utility for asynchronous event handling and reactive pub/sub pipelines.',
-        tags: ['TypeScript', 'JavaScript', 'NPM', 'Event-Emitter', 'Async'],
+        summary: 'Statically-typed compiled programming language featuring a 100% self-hosted compiler that combines the performance and memory safety of Rust with the velocity of Go.',
+        tags: ['Zyra', 'Rust', 'Self-Hosted Compiler', 'Native Code', 'CLI', 'VS Code Extension'],
         links: [
-            { label: 'NPM', url: 'https://www.npmjs.com/package/zyra-ts' },
+            { label: 'Documentation (Live Site)', url: 'https://zyra-lang.dev' },
             { label: 'GitHub', url: 'https://github.com/AndreaPallotta/zyra' },
         ],
     },
