@@ -159,8 +159,8 @@ export const projects: Project[] = [
         summary: 'Cyber security research paper analyzing network vulnerability vectors, exploit prevention, and security protocol analysis.',
         tags: ['Cyber Security', 'Research', 'Network Security', 'Vulnerability Analysis'],
         links: [
-            { label: 'Research Paper PDF', url: 'https://github.com/AndreaPallotta/CSEC_472_Group_2/blob/main/project/Group2_Final_Paper.pdf' },
-            { label: 'GitHub', url: 'https://github.com/AndreaPallotta/CSEC_472_Group_2' },
+            { label: 'Research Paper PDF', url: 'https://github.com/AndreaPallotta/school-projects/blob/main/CSEC_472_Group_2/project/Group2_Final_Paper.pdf' },
+            { label: 'GitHub', url: 'https://github.com/AndreaPallotta/school-projects/tree/main/CSEC_472_Group_2' },
         ],
     },
     {
