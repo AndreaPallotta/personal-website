@@ -135,7 +135,7 @@ export const projects: Project[] = [
         summary: 'Subroutine CS (subroutine-cs.cc) is an interactive computer science and systems blog covering algorithms, low-level systems, C++, and networking with audio-visual simulations.',
         tags: ['TypeScript', 'MDX', 'Astro', 'CSS', 'React', 'Web Audio API'],
         links: [
-            { label: 'Subroutine CS (Live Site)', url: 'https://subroutine-cs.cc' },
+            { label: 'Site', url: 'https://subroutine-cs.cc' },
             { label: 'GitHub', url: 'https://github.com/AndreaPallotta/subroutine' },
         ],
         image: { src: '/assets/subroutine.svg', alt: 'Subroutine CS Blog' },
@@ -156,7 +156,8 @@ export const projects: Project[] = [
         summary: 'Statically-typed compiled programming language featuring a 100% self-hosted compiler that combines the performance and memory safety of Rust with the velocity of Go.',
         tags: ['Zyra', 'Rust', 'Self-Hosted Compiler', 'Native Code', 'CLI', 'VS Code Extension'],
         links: [
-            { label: 'Documentation (Live Site)', url: 'https://zyra-lang.dev' },
+            { label: 'Site', url: 'https://zyra-lang.dev' },
+            { label: 'VS Code Marketplace', url: 'https://marketplace.visualstudio.com/items?itemName=AndreaPallotta.zyra-vscode' },
             { label: 'GitHub', url: 'https://github.com/AndreaPallotta/zyra' },
         ],
     },

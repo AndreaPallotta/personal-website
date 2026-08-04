@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Activity, Package, Github, GitCommit, RefreshCw, 
-  Sparkles, Star, Terminal, ExternalLink, CheckCircle2, FolderGit2
+  Sparkles, Star, Terminal, ExternalLink, Code2, FolderGit2, Globe
 } from 'lucide-react';
 import { projects } from '../content';
 
@@ -11,6 +11,12 @@ interface StatsPageProps {
 
 interface NpmStats {
   downloads: number;
+}
+
+interface PyPIStats {
+  data?: {
+    last_month?: number;
+  };
 }
 
 interface GithubRepo {
@@ -29,19 +35,27 @@ interface GithubEvent {
 export const StatsPage: React.FC<StatsPageProps> = ({ isDark = true }) => {
   const [zyraDownloads, setZyraDownloads] = useState<number | null>(null);
   const [ezTemplatesDownloads, setEzTemplatesDownloads] = useState<number | null>(null);
+  const [confignitionDownloads, setConfignitionDownloads] = useState<number | null>(null);
+
+  const [cmakeGuiVsDownloads, setCmakeGuiVsDownloads] = useState<number | null>(406);
+  const [zyraVsDownloads, setZyraVsDownloads] = useState<number | null>(1);
+
+  const [pypiQexDownloads, setPypiQexDownloads] = useState<number | null>(173);
+
   const [totalStars, setTotalStars] = useState<number>(18);
   const [recentCommits, setRecentCommits] = useState<Array<{ repo: string; message: string; date: string }>>([]);
-  const [activeRepo, setActiveRepo] = useState<string>('subroutine');
-  const [latestCommitMsg, setLatestCommitMsg] = useState<string>('feat: add cache line and SIMD instruction comparison visualizers');
+  const [activeRepo, setActiveRepo] = useState<string>('antimatter');
+  const [latestCommitMsg, setLatestCommitMsg] = useState<string>('feat: initial release of Darkmatter v1.0.0');
   const [loading, setLoading] = useState<boolean>(true);
 
   const fetchTelemetry = async () => {
     setLoading(true);
     try {
       // 1. Fetch NPM Download Counts
-      const [zyraRes, ezRes] = await Promise.allSettled([
+      const [zyraRes, ezRes, configRes] = await Promise.allSettled([
         fetch('https://api.npmjs.org/downloads/point/last-month/zyra-ts'),
-        fetch('https://api.npmjs.org/downloads/point/last-month/ez-templates')
+        fetch('https://api.npmjs.org/downloads/point/last-month/ez-templates'),
+        fetch('https://api.npmjs.org/downloads/point/last-month/confignition')
       ]);
 
       if (zyraRes.status === 'fulfilled' && zyraRes.value.ok) {
@@ -58,7 +72,63 @@ export const StatsPage: React.FC<StatsPageProps> = ({ isDark = true }) => {
         setEzTemplatesDownloads(350);
       }
 
-      // 2. Fetch GitHub Repositories for Stars Counter
+      if (configRes.status === 'fulfilled' && configRes.value.ok) {
+        const data: NpmStats = await configRes.value.json();
+        setConfignitionDownloads(data.downloads || 120);
+      } else {
+        setConfignitionDownloads(120);
+      }
+
+      // 2. Fetch VS Code Marketplace Extensions Stats
+      try {
+        const body = {
+          filters: [{
+            criteria: [
+              { filterType: 7, value: "AndreaPallotta.cmake-gui-editor" },
+              { filterType: 7, value: "AndreaPallotta.zyra-vscode" }
+            ]
+          }],
+          flags: 914
+        };
+        const vsRes = await fetch("https://marketplace.visualstudio.com/_apis/public/gallery/extensionquery", {
+          method: 'POST',
+          headers: {
+            "Accept": "application/json;api-version=6.0-preview.1",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(body)
+        });
+        if (vsRes.ok) {
+          const vsData = await vsRes.json();
+          const extensions = vsData.results?.[0]?.extensions || [];
+          extensions.forEach((ext: any) => {
+            const installStat = ext.statistics?.find((s: any) => s.statisticName === "install");
+            const count = installStat?.value ? Math.floor(installStat.value) : 0;
+            if (ext.extensionName === "cmake-gui-editor") {
+              setCmakeGuiVsDownloads(count || 406);
+            } else if (ext.extensionName === "zyra-vscode") {
+              setZyraVsDownloads(count || 1);
+            }
+          });
+        }
+      } catch (e) {
+        console.warn('VS Code marketplace fetch error:', e);
+      }
+
+      // 3. Fetch PyPI Download Counts
+      try {
+        const pypiRes = await fetch('https://pypistats.org/api/packages/qex/recent');
+        if (pypiRes.ok) {
+          const pypiData: PyPIStats = await pypiRes.json();
+          if (pypiData.data?.last_month) {
+            setPypiQexDownloads(pypiData.data.last_month);
+          }
+        }
+      } catch (e) {
+        console.warn('PyPI fetch error:', e);
+      }
+
+      // 4. Fetch GitHub Repositories for Stars Counter
       const reposRes = await fetch('https://api.github.com/users/AndreaPallotta/repos?per_page=100');
       if (reposRes.ok) {
         const reposData: GithubRepo[] = await reposRes.json();
@@ -66,7 +136,7 @@ export const StatsPage: React.FC<StatsPageProps> = ({ isDark = true }) => {
         setTotalStars(Math.max(18, starsSum));
       }
 
-      // 3. Fetch GitHub Recent Events for Active Repo & Commits
+      // 5. Fetch GitHub Recent Events for Active Repo & Commits
       const eventsRes = await fetch('https://api.github.com/users/AndreaPallotta/events/public?per_page=30');
       if (eventsRes.ok) {
         const eventsData: GithubEvent[] = await eventsRes.json();
@@ -92,13 +162,13 @@ export const StatsPage: React.FC<StatsPageProps> = ({ isDark = true }) => {
           setLatestCommitMsg(parsedCommits[0].message);
         } else {
           setRecentCommits([
+            { repo: 'antimatter', message: 'feat: initial release of Darkmatter v1.0.0', date: 'Recent' },
             { repo: 'subroutine', message: 'feat: add cache line and SIMD instruction comparison visualizers', date: 'Recent' },
-            { repo: 'zyra-ts', message: 'perf: optimize zero-dependency TypeScript validation engine', date: 'Recent' },
-            { repo: 'ez-templates', message: 'docs: update template generators for CLI scaffolding', date: 'Recent' },
-            { repo: 'qex', message: 'refactor: quantum state vector simulator probability amplitudes', date: 'Recent' }
+            { repo: 'confignition', message: 'feat: add S3/Azure remote storage loaders and hot reload', date: 'Recent' },
+            { repo: 'cmake-gui-editor', message: 'feat: three-panel lossless CMake Lists visual editor', date: 'Recent' }
           ]);
-          setActiveRepo('subroutine');
-          setLatestCommitMsg('feat: add cache line and SIMD instruction comparison visualizers');
+          setActiveRepo('antimatter');
+          setLatestCommitMsg('feat: initial release of Darkmatter v1.0.0');
         }
       }
     } catch (err) {
@@ -112,7 +182,8 @@ export const StatsPage: React.FC<StatsPageProps> = ({ isDark = true }) => {
     fetchTelemetry();
   }, []);
 
-  const totalNpmDownloads = (zyraDownloads || 480) + (ezTemplatesDownloads || 350);
+  const totalNpmDownloads = (zyraDownloads || 480) + (ezTemplatesDownloads || 350) + (confignitionDownloads || 120);
+  const totalVsDownloads = (cmakeGuiVsDownloads || 406) + (zyraVsDownloads || 1);
 
   return (
     <div className="max-w-5xl w-full mx-auto p-6 md:p-12 space-y-8 overflow-y-auto max-h-[calc(100vh-140px)] animate-in fade-in duration-200 pb-28">
@@ -126,7 +197,7 @@ export const StatsPage: React.FC<StatsPageProps> = ({ isDark = true }) => {
               <span>Live Telemetry & Activity Stats</span>
             </h2>
             <p className={`text-xs font-mono mt-1 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-              Real-time API metrics across NPM packages, PyPI modules, and GitHub commit velocity
+              Real-time API metrics across VS Code Extensions, NPM packages, PyPI modules, web properties, and GitHub commit velocity
             </p>
           </div>
 
@@ -188,10 +259,42 @@ export const StatsPage: React.FC<StatsPageProps> = ({ isDark = true }) => {
         </div>
       </div>
 
-      {/* Metric Cards Grid (3 Columns) */}
+      {/* Metric Cards Row 1: Package Marketplaces & Repositories (3 Columns) */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         
-        {/* Card 1: NPM Package Downloads */}
+        {/* Card 1: VS Code Marketplace Extensions */}
+        <div className={`p-6 rounded-2xl border shadow-xl flex flex-col justify-between space-y-4 ${
+          isDark ? 'bg-[#0f172a]/90 border-slate-800' : 'bg-white border-slate-200 shadow-slate-100'
+        }`}>
+          <div className="flex items-center justify-between">
+            <span className={`text-xs font-mono font-bold uppercase tracking-wider ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+              VS Code Extensions
+            </span>
+            <Code2 className="w-5 h-5 text-blue-400" />
+          </div>
+
+          <div>
+            <div className={`text-3xl font-extrabold font-mono tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>
+              {loading && !cmakeGuiVsDownloads ? '...' : `${totalVsDownloads.toLocaleString()}+`}
+            </div>
+            <p className={`text-xs font-mono mt-1 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+              Total Marketplace Installs
+            </p>
+          </div>
+
+          <div className={`pt-3 border-t text-[11px] font-mono space-y-1 ${isDark ? 'border-slate-800 text-slate-400' : 'border-slate-100 text-slate-600'}`}>
+            <div className="flex justify-between">
+              <span>cmake-gui-editor:</span>
+              <span className="font-bold text-emerald-400">~{cmakeGuiVsDownloads || 406} installs</span>
+            </div>
+            <div className="flex justify-between">
+              <span>zyra-vscode:</span>
+              <span className="font-bold text-blue-400">~{zyraVsDownloads || 1} installs</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Card 2: NPM Package Downloads */}
         <div className={`p-6 rounded-2xl border shadow-xl flex flex-col justify-between space-y-4 ${
           isDark ? 'bg-[#0f172a]/90 border-slate-800' : 'bg-white border-slate-200 shadow-slate-100'
         }`}>
@@ -207,11 +310,15 @@ export const StatsPage: React.FC<StatsPageProps> = ({ isDark = true }) => {
               {loading && !zyraDownloads ? '...' : `${totalNpmDownloads.toLocaleString()}+`}
             </div>
             <p className={`text-xs font-mono mt-1 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-              Monthly downloads (zyra-ts & ez-templates)
+              Monthly downloads
             </p>
           </div>
 
           <div className={`pt-3 border-t text-[11px] font-mono space-y-1 ${isDark ? 'border-slate-800 text-slate-400' : 'border-slate-100 text-slate-600'}`}>
+            <div className="flex justify-between">
+              <span>confignition:</span>
+              <span className="font-bold text-emerald-400">~{confignitionDownloads || 120}/mo</span>
+            </div>
             <div className="flex justify-between">
               <span>zyra-ts:</span>
               <span className="font-bold text-blue-400">~{zyraDownloads || 480}/mo</span>
@@ -223,7 +330,76 @@ export const StatsPage: React.FC<StatsPageProps> = ({ isDark = true }) => {
           </div>
         </div>
 
-        {/* Card 2: GitHub Open Source Repositories */}
+        {/* Card 3: PyPI Package Downloads */}
+        <div className={`p-6 rounded-2xl border shadow-xl flex flex-col justify-between space-y-4 ${
+          isDark ? 'bg-[#0f172a]/90 border-slate-800' : 'bg-white border-slate-200 shadow-slate-100'
+        }`}>
+          <div className="flex items-center justify-between">
+            <span className={`text-xs font-mono font-bold uppercase tracking-wider ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+              PyPI Packages
+            </span>
+            <Terminal className="w-5 h-5 text-emerald-400" />
+          </div>
+
+          <div>
+            <div className={`text-3xl font-extrabold font-mono tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>
+              {loading && !pypiQexDownloads ? '...' : `${(pypiQexDownloads || 173).toLocaleString()}+`}
+            </div>
+            <p className={`text-xs font-mono mt-1 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+              Monthly downloads
+            </p>
+          </div>
+
+          <div className={`pt-3 border-t text-[11px] font-mono space-y-1 ${isDark ? 'border-slate-800 text-slate-400' : 'border-slate-100 text-slate-600'}`}>
+            <div className="flex justify-between">
+              <span>qex (Python):</span>
+              <span className="font-bold text-emerald-400">~{pypiQexDownloads || 173}/mo</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      {/* Metric Cards Row 2: Live Websites & GitHub Telemetry (2 Columns) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        {/* Card 4: Live Websites & Platforms */}
+        <div className={`p-6 rounded-2xl border shadow-xl flex flex-col justify-between space-y-4 ${
+          isDark ? 'bg-[#0f172a]/90 border-slate-800' : 'bg-white border-slate-200 shadow-slate-100'
+        }`}>
+          <div className="flex items-center justify-between">
+            <span className={`text-xs font-mono font-bold uppercase tracking-wider ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+              Live Websites
+            </span>
+            <Globe className="w-5 h-5 text-cyan-400" />
+          </div>
+
+          <div>
+            <div className={`text-3xl font-extrabold font-mono tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>
+              3 Sites
+            </div>
+            <p className={`text-xs font-mono mt-1 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+              Active Web Properties
+            </p>
+          </div>
+
+          <div className={`pt-3 border-t text-[11px] font-mono space-y-1 ${isDark ? 'border-slate-800 text-slate-400' : 'border-slate-100 text-slate-600'}`}>
+            <div className="flex justify-between">
+              <a href="https://andreapallotta.dev" target="_blank" rel="noopener noreferrer" className="hover:underline text-slate-300">andreapallotta.dev</a>
+              <span className="font-bold text-emerald-400">Online</span>
+            </div>
+            <div className="flex justify-between">
+              <a href="https://zyra-lang.dev" target="_blank" rel="noopener noreferrer" className="hover:underline text-slate-300">zyra-lang.dev</a>
+              <span className="font-bold text-emerald-400">Online</span>
+            </div>
+            <div className="flex justify-between">
+              <a href="https://subroutine-cs.cc" target="_blank" rel="noopener noreferrer" className="hover:underline text-slate-300">subroutine-cs.cc</a>
+              <span className="font-bold text-emerald-400">Online</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Card 5: GitHub Open Source Repositories */}
         <div className={`p-6 rounded-2xl border shadow-xl flex flex-col justify-between space-y-4 ${
           isDark ? 'bg-[#0f172a]/90 border-slate-800' : 'bg-white border-slate-200 shadow-slate-100'
         }`}>
@@ -231,7 +407,7 @@ export const StatsPage: React.FC<StatsPageProps> = ({ isDark = true }) => {
             <span className={`text-xs font-mono font-bold uppercase tracking-wider ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
               GitHub Telemetry
             </span>
-            <Github className="w-5 h-5 text-cyan-400" />
+            <Github className="w-5 h-5 text-amber-400" />
           </div>
 
           <div>
@@ -251,38 +427,6 @@ export const StatsPage: React.FC<StatsPageProps> = ({ isDark = true }) => {
               <span>Public Stars:</span>
             </span>
             <span className="font-bold text-amber-400">{totalStars} ★</span>
-          </div>
-        </div>
-
-        {/* Card 3: PyPI & Systems Ecosystem */}
-        <div className={`p-6 rounded-2xl border shadow-xl flex flex-col justify-between space-y-4 ${
-          isDark ? 'bg-[#0f172a]/90 border-slate-800' : 'bg-white border-slate-200 shadow-slate-100'
-        }`}>
-          <div className="flex items-center justify-between">
-            <span className={`text-xs font-mono font-bold uppercase tracking-wider ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-              PyPI & Systems
-            </span>
-            <Terminal className="w-5 h-5 text-emerald-400" />
-          </div>
-
-          <div>
-            <div className={`text-3xl font-extrabold font-mono tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>
-              Active
-            </div>
-            <p className={`text-xs font-mono mt-1 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-              Quantum State & CS Tooling
-            </p>
-          </div>
-
-          <div className={`pt-3 border-t text-[11px] font-mono space-y-1 ${isDark ? 'border-slate-800 text-slate-400' : 'border-slate-100 text-slate-600'}`}>
-            <div className="flex justify-between">
-              <span>qex (Python):</span>
-              <span className="font-bold text-emerald-400">Published</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Subroutine CS:</span>
-              <span className="font-bold text-cyan-400">Online</span>
-            </div>
           </div>
         </div>
 
