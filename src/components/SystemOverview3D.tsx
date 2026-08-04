@@ -8,8 +8,23 @@ import { TerminalShell } from './TerminalShell';
 import { StatsPage } from './StatsPage';
 
 export const SystemOverview3D: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'shell' | 'stats' | 'experience' | 'projects' | 'education' | 'resume'>('shell');
+  const [activeTab, setActiveTab] = useState<'shell' | 'stats' | 'experience' | 'projects' | 'education' | 'resume'>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = sessionStorage.getItem('ap_portfolio_active_tab');
+      if (saved && ['shell', 'stats', 'experience', 'projects', 'education', 'resume'].includes(saved)) {
+        return saved as 'shell' | 'stats' | 'experience' | 'projects' | 'education' | 'resume';
+      }
+    }
+    return 'shell';
+  });
   const [showPdfEmbed, setShowPdfEmbed] = useState(false);
+
+  // Sync activeTab with sessionStorage (persists across refresh, resets when browser tab closes)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem('ap_portfolio_active_tab', activeTab);
+    }
+  }, [activeTab]);
 
   // Initialize theme from system preference or saved localStorage
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
