@@ -101,12 +101,12 @@ export const projects: Project[] = [
         ],
     },
     {
-        id: 'antimatter',
-        title: 'antimatter',
+        id: 'darkmatter',
+        title: 'darkmatter',
         summary: 'Remote bridge and reverse proxy for Google Antigravity featuring local Wi-Fi auto-discovery, Cloudflare Tunnels, mobile PWA dashboard, live log streaming, and a WiX MSI installer.',
         tags: ['Go', 'Reverse Proxy', 'Google Antigravity', 'PWA', 'WiX MSI', 'Windows'],
         links: [
-            { label: 'GitHub', url: 'https://github.com/AndreaPallotta/antimatter' },
+            { label: 'GitHub', url: 'https://github.com/AndreaPallotta/darkmatter' },
         ],
     },
     {

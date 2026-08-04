@@ -44,7 +44,7 @@ export const StatsPage: React.FC<StatsPageProps> = ({ isDark = true }) => {
 
   const [totalStars, setTotalStars] = useState<number>(18);
   const [recentCommits, setRecentCommits] = useState<Array<{ repo: string; message: string; date: string }>>([]);
-  const [activeRepo, setActiveRepo] = useState<string>('antimatter');
+  const [activeRepo, setActiveRepo] = useState<string>('darkmatter');
   const [latestCommitMsg, setLatestCommitMsg] = useState<string>('feat: initial release of Darkmatter v1.0.0');
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -162,12 +162,12 @@ export const StatsPage: React.FC<StatsPageProps> = ({ isDark = true }) => {
           setLatestCommitMsg(parsedCommits[0].message);
         } else {
           setRecentCommits([
-            { repo: 'antimatter', message: 'feat: initial release of Darkmatter v1.0.0', date: 'Recent' },
+            { repo: 'darkmatter', message: 'feat: initial release of Darkmatter v1.0.0', date: 'Recent' },
             { repo: 'subroutine', message: 'feat: add cache line and SIMD instruction comparison visualizers', date: 'Recent' },
             { repo: 'confignition', message: 'feat: add S3/Azure remote storage loaders and hot reload', date: 'Recent' },
             { repo: 'cmake-gui-editor', message: 'feat: three-panel lossless CMake Lists visual editor', date: 'Recent' }
           ]);
-          setActiveRepo('antimatter');
+          setActiveRepo('darkmatter');
           setLatestCommitMsg('feat: initial release of Darkmatter v1.0.0');
         }
       }
