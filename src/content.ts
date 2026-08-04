@@ -92,6 +92,44 @@ export const contact = {
 
 export const projects: Project[] = [
     {
+        id: 'antimatter',
+        title: 'antimatter',
+        summary: 'Remote bridge and reverse proxy for Google Antigravity featuring local Wi-Fi auto-discovery, Cloudflare Tunnels, mobile PWA dashboard, live log streaming, and a WiX MSI installer.',
+        tags: ['Go', 'Reverse Proxy', 'Google Antigravity', 'PWA', 'WiX MSI', 'Windows'],
+        links: [
+            { label: 'GitHub', url: 'https://github.com/AndreaPallotta/antimatter' },
+        ],
+    },
+    {
+        id: 'confignition',
+        title: 'confignition',
+        summary: 'TypeScript configuration loader supporting JSON, YAML, INI, .env, and TOML with hot-reloading, custom parsing, Express middleware, and AWS S3 / Azure Blob storage support.',
+        tags: ['TypeScript', 'NPM', 'Configuration', 'YAML', 'TOML', 'Hot-Reload', 'Express'],
+        links: [
+            { label: 'NPM Package', url: 'https://www.npmjs.com/package/confignition' },
+            { label: 'GitHub', url: 'https://github.com/AndreaPallotta/confignition' },
+        ],
+    },
+    {
+        id: 'cmake-gui-editor',
+        title: 'cmake-gui-editor',
+        summary: 'VS Code extension providing a visual, lossless editor for CMakeLists.txt and *.cmake files to manage metadata, target dependencies, and include directories without breaking raw CMake syntax.',
+        tags: ['TypeScript', 'VS Code Extension', 'CMake', 'Visual Editor', 'Developer Tools'],
+        links: [
+            { label: 'VS Code Marketplace', url: 'https://marketplace.visualstudio.com/items?itemName=AndreaPallotta.cmake-gui-editor&ssr=false#overview' },
+            { label: 'GitHub', url: 'https://github.com/AndreaPallotta/cmake-gui-editor' },
+        ],
+    },
+    {
+        id: 'btplus',
+        title: 'btplus',
+        summary: 'Windows background utility that automatically connects Bluetooth audio devices (A2DP & HFP) upon powering on using Win32 device arrival events, Task Scheduler, and a WiX MSI installer.',
+        tags: ['C++', 'Win32 API', 'Bluetooth', 'Windows', 'WiX MSI', 'Task Scheduler'],
+        links: [
+            { label: 'GitHub', url: 'https://github.com/AndreaPallotta/btplus' },
+        ],
+    },
+    {
         id: 'subroutine',
         title: 'subroutine cs',
         summary: 'Subroutine CS (subroutine-cs.cc) is an interactive computer science and systems blog covering algorithms, low-level systems, C++, and networking with audio-visual simulations.',
@@ -151,16 +189,6 @@ export const projects: Project[] = [
         tags: ['Python', 'Quantum Computing', 'Simulation', 'Modular'],
         links: [
             { label: 'GitHub', url: 'https://github.com/AndreaPallotta/qlego' },
-        ],
-    },
-    {
-        id: 'csec-472-research',
-        title: 'csec-472-research',
-        summary: 'Cyber security research paper analyzing network vulnerability vectors, exploit prevention, and security protocol analysis.',
-        tags: ['Cyber Security', 'Research', 'Network Security', 'Vulnerability Analysis'],
-        links: [
-            { label: 'Research Paper PDF', url: 'https://github.com/AndreaPallotta/school-projects/blob/main/CSEC_472_Group_2/project/Group2_Final_Paper.pdf' },
-            { label: 'GitHub', url: 'https://github.com/AndreaPallotta/school-projects/tree/main/CSEC_472_Group_2' },
         ],
     },
     {
