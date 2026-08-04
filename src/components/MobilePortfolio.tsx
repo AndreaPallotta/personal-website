@@ -178,11 +178,6 @@ export const MobilePortfolio: React.FC = () => {
             <div key={proj.id} className="p-4 rounded-xl bg-[#0b0f19]/80 border border-slate-800 space-y-2">
               <div className="flex items-center justify-between">
                 <h3 className="text-xs font-bold text-white font-mono">{proj.title}</h3>
-                {proj.id === 'subroutine' && (
-                  <span className="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-cyan-950 text-cyan-300 border border-cyan-500/30">
-                    Flagship
-                  </span>
-                )}
               </div>
               <p className="text-xs text-slate-400 leading-relaxed">{proj.summary}</p>
               <div className="flex flex-wrap gap-1 pt-1">

@@ -92,6 +92,15 @@ export const contact = {
 
 export const projects: Project[] = [
     {
+        id: 'chronicle',
+        title: 'chronicle',
+        summary: 'Personal engineering activity feed and Git commit dashboard featuring a 52-week contribution heatmap, repo sidebar, fuzzy search, cascading config, and diffshot output (PNG/SVG/HTML).',
+        tags: ['Go', 'Bubble Tea', 'TUI', 'Git', 'Chroma', 'WiX MSI', 'Developer Tools'],
+        links: [
+            { label: 'GitHub', url: 'https://github.com/AndreaPallotta/chronicle' },
+        ],
+    },
+    {
         id: 'antimatter',
         title: 'antimatter',
         summary: 'Remote bridge and reverse proxy for Google Antigravity featuring local Wi-Fi auto-discovery, Cloudflare Tunnels, mobile PWA dashboard, live log streaming, and a WiX MSI installer.',

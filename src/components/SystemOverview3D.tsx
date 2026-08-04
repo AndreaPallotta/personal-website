@@ -180,13 +180,6 @@ export const SystemOverview3D: React.FC = () => {
                       }`}>
                         {proj.title}
                       </h3>
-                      {proj.id === 'subroutine' && (
-                        <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold border ${
-                          isDark ? 'bg-blue-950 text-blue-300 border-blue-500/30' : 'bg-blue-50 text-blue-700 border-blue-200'
-                        }`}>
-                          Flagship
-                        </span>
-                      )}
                     </div>
                     <p className={`text-xs leading-relaxed ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>{proj.summary}</p>
                     <div className="flex flex-wrap gap-1.5 pt-2">
