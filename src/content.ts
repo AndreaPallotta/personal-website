@@ -92,6 +92,17 @@ export const contact = {
 
 export const projects: Project[] = [
     {
+        id: 'af-toolkit',
+        title: 'af-toolkit',
+        summary: 'Developer toolkit for AI agents and Model Context Protocol (MCP). Build, test, slice, audit, evaluate, and sandbox MCP servers and agent trajectories.',
+        tags: ['Python', 'FastMCP', 'AI Agents', 'OpenAPI', 'AST Slicing', 'PyPI', 'CLI', 'Developer Tools'],
+        links: [
+            { label: 'PyPI', url: 'https://pypi.org/project/af-toolkit/' },
+            { label: 'GitHub', url: 'https://github.com/AndreaPallotta/af-toolkit' },
+        ],
+        image: { src: '/assets/af.png', alt: 'AgentForge Toolkit Logo' },
+    },
+    {
         id: 'chronicle',
         title: 'chronicle',
         summary: 'Personal engineering activity feed and Git commit dashboard featuring a 52-week contribution heatmap, repo sidebar, fuzzy search, cascading config, and diffshot output (PNG/SVG/HTML).',

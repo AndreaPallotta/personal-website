@@ -41,6 +41,8 @@ export const StatsPage: React.FC<StatsPageProps> = ({ isDark = true }) => {
   const [zyraVsDownloads, setZyraVsDownloads] = useState<number | null>(1);
 
   const [pypiQexDownloads, setPypiQexDownloads] = useState<number | null>(173);
+  const [pypiAfDownloads, setPypiAfDownloads] = useState<number | null>(15);
+  const [totalPublicRepos, setTotalPublicRepos] = useState<number>(38);
 
   const [totalStars, setTotalStars] = useState<number>(18);
   const [recentCommits, setRecentCommits] = useState<Array<{ repo: string; message: string; date: string }>>([]);
@@ -117,23 +119,33 @@ export const StatsPage: React.FC<StatsPageProps> = ({ isDark = true }) => {
 
       // 3. Fetch PyPI Download Counts
       try {
-        const pypiRes = await fetch('https://pypistats.org/api/packages/qex/recent');
-        if (pypiRes.ok) {
-          const pypiData: PyPIStats = await pypiRes.json();
-          if (pypiData.data?.last_month) {
-            setPypiQexDownloads(pypiData.data.last_month);
+        const [qexRes, afRes] = await Promise.allSettled([
+          fetch('https://pypistats.org/api/packages/qex/recent'),
+          fetch('https://pypistats.org/api/packages/af-toolkit/recent')
+        ]);
+        if (qexRes.status === 'fulfilled' && qexRes.value.ok) {
+          const qexData: PyPIStats = await qexRes.value.json();
+          if (qexData.data?.last_month) {
+            setPypiQexDownloads(qexData.data.last_month);
+          }
+        }
+        if (afRes.status === 'fulfilled' && afRes.value.ok) {
+          const afData: PyPIStats = await afRes.value.json();
+          if (afData.data?.last_month) {
+            setPypiAfDownloads(afData.data.last_month);
           }
         }
       } catch (e) {
         console.warn('PyPI fetch error:', e);
       }
 
-      // 4. Fetch GitHub Repositories for Stars Counter
+      // 4. Fetch GitHub Repositories for Stars Counter & Repo Count
       const reposRes = await fetch('https://api.github.com/users/AndreaPallotta/repos?per_page=100');
       if (reposRes.ok) {
         const reposData: GithubRepo[] = await reposRes.json();
         const starsSum = reposData.reduce((acc, r) => acc + (r.stargazers_count || 0), 0);
         setTotalStars(Math.max(18, starsSum));
+        setTotalPublicRepos(reposData.length || 38);
       }
 
       // 5. Fetch GitHub Recent Events for Active Repo & Commits
@@ -184,6 +196,7 @@ export const StatsPage: React.FC<StatsPageProps> = ({ isDark = true }) => {
 
   const totalNpmDownloads = (zyraDownloads || 480) + (ezTemplatesDownloads || 350) + (confignitionDownloads || 120);
   const totalVsDownloads = (cmakeGuiVsDownloads || 406) + (zyraVsDownloads || 1);
+  const totalPypiDownloads = (pypiQexDownloads || 173) + (pypiAfDownloads || 15);
 
   return (
     <div className="max-w-5xl w-full mx-auto p-6 md:p-12 space-y-8 overflow-y-auto max-h-[calc(100vh-140px)] animate-in fade-in duration-200 pb-28">
@@ -343,7 +356,7 @@ export const StatsPage: React.FC<StatsPageProps> = ({ isDark = true }) => {
 
           <div>
             <div className={`text-3xl font-extrabold font-mono tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>
-              {loading && !pypiQexDownloads ? '...' : `${(pypiQexDownloads || 173).toLocaleString()}+`}
+              {loading && !pypiQexDownloads ? '...' : `${totalPypiDownloads.toLocaleString()}+`}
             </div>
             <p className={`text-xs font-mono mt-1 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
               Monthly downloads
@@ -352,7 +365,11 @@ export const StatsPage: React.FC<StatsPageProps> = ({ isDark = true }) => {
 
           <div className={`pt-3 border-t text-[11px] font-mono space-y-1 ${isDark ? 'border-slate-800 text-slate-400' : 'border-slate-100 text-slate-600'}`}>
             <div className="flex justify-between">
-              <span>qex (Python):</span>
+              <a href="https://pypi.org/project/af-toolkit/" target="_blank" rel="noopener noreferrer" className="hover:underline text-slate-300">af-toolkit (Python):</a>
+              <span className="font-bold text-cyan-400">~{pypiAfDownloads || 15}/mo</span>
+            </div>
+            <div className="flex justify-between">
+              <a href="https://pypi.org/project/qex/" target="_blank" rel="noopener noreferrer" className="hover:underline text-slate-300">qex (Python):</a>
               <span className="font-bold text-emerald-400">~{pypiQexDownloads || 173}/mo</span>
             </div>
           </div>
@@ -412,10 +429,10 @@ export const StatsPage: React.FC<StatsPageProps> = ({ isDark = true }) => {
 
           <div>
             <div className={`text-3xl font-extrabold font-mono tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>
-              {projects.length} Repos
+              {loading && !totalPublicRepos ? '...' : `${totalPublicRepos} Repos`}
             </div>
             <p className={`text-xs font-mono mt-1 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-              Featured public repositories
+              Public GitHub repositories ({projects.length} featured)
             </p>
           </div>
 
