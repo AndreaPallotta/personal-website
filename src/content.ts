@@ -142,11 +142,31 @@ export const projects: Project[] = [
     {
         id: 'confignition',
         title: 'confignition',
-        summary: 'TypeScript configuration loader supporting JSON, YAML, INI, .env, and TOML with hot-reloading, custom parsing, Express middleware, and AWS S3 / Azure Blob storage support.',
-        tags: ['TypeScript', 'NPM', 'Configuration', 'YAML', 'TOML', 'Hot-Reload', 'Express'],
+        summary: 'A modern TypeScript library to parse, watch, and write configuration files (JSON, YAML, TOML, INI, .env) with optional AWS S3 / Azure Blob cloud support, hot reload, field-level encryption, and an Express middleware.',
+        tags: ['TypeScript', 'NPM', 'Configuration', 'YAML', 'TOML', 'Hot-Reload', 'Express', 'Cloud Storage'],
         links: [
-            { label: 'NPM Package', url: 'https://www.npmjs.com/package/confignition' },
+            { label: 'NPM', url: 'https://www.npmjs.com/package/confignition' },
             { label: 'GitHub', url: 'https://github.com/AndreaPallotta/confignition' },
+        ],
+    },
+    {
+        id: 'xpress-fuse',
+        title: 'xpress-fuse',
+        summary: 'Production-ready, lightweight middleware bundle for Express.js with TypeScript support, security headers, CORS, rate limiting, and compression.',
+        tags: ['TypeScript', 'NPM', 'Express', 'Middleware', 'Security', 'Helmet', 'CORS', 'Rate-Limit'],
+        links: [
+            { label: 'NPM', url: 'https://www.npmjs.com/package/xpress-fuse' },
+            { label: 'GitHub', url: 'https://github.com/AndreaPallotta/xpress-fuse' },
+        ],
+    },
+    {
+        id: 'keydrift',
+        title: 'keydrift',
+        summary: 'Environment variable drift detector and schema generator for multi-environment projects with automated CI auditing and type generation.',
+        tags: ['TypeScript', 'NPM', 'CLI', 'DevOps', 'Environment Variables', 'Schema Generator'],
+        links: [
+            { label: 'NPM', url: 'https://www.npmjs.com/package/keydrift' },
+            { label: 'GitHub', url: 'https://github.com/AndreaPallotta/keydrift' },
         ],
     },
     {

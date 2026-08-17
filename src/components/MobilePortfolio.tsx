@@ -12,22 +12,34 @@ export const MobilePortfolio: React.FC = () => {
   useEffect(() => {
     async function fetchMobileStats() {
       try {
-        const [zyraRes, ezRes, eventsRes] = await Promise.allSettled([
-          fetch('https://api.npmjs.org/downloads/point/last-month/zyra-ts'),
+        const [ezRes, configRes, xpressRes, keydriftRes, eventsRes] = await Promise.allSettled([
           fetch('https://api.npmjs.org/downloads/point/last-month/ez-templates'),
+          fetch('https://api.npmjs.org/downloads/point/last-month/confignition'),
+          fetch('https://api.npmjs.org/downloads/point/last-month/xpress-fuse'),
+          fetch('https://api.npmjs.org/downloads/point/last-month/keydrift'),
           fetch('https://api.github.com/users/AndreaPallotta/events/public?per_page=10'),
         ]);
 
         let sum = 0;
-        if (zyraRes.status === 'fulfilled' && zyraRes.value.ok) {
-          const zData = await zyraRes.value.json();
-          sum += zData.downloads || 480;
-        } else sum += 480;
-
         if (ezRes.status === 'fulfilled' && ezRes.value.ok) {
           const eData = await ezRes.value.json();
           sum += eData.downloads || 350;
         } else sum += 350;
+
+        if (configRes.status === 'fulfilled' && configRes.value.ok) {
+          const cData = await configRes.value.json();
+          sum += cData.downloads || 120;
+        } else sum += 120;
+
+        if (xpressRes.status === 'fulfilled' && xpressRes.value.ok) {
+          const xData = await xpressRes.value.json();
+          sum += xData.downloads || 80;
+        } else sum += 80;
+
+        if (keydriftRes.status === 'fulfilled' && keydriftRes.value.ok) {
+          const kData = await keydriftRes.value.json();
+          sum += kData.downloads || 45;
+        } else sum += 45;
 
         setNpmDownloads(sum);
 

@@ -33,9 +33,10 @@ interface GithubEvent {
 }
 
 export const StatsPage: React.FC<StatsPageProps> = ({ isDark = true }) => {
-  const [zyraDownloads, setZyraDownloads] = useState<number | null>(null);
   const [ezTemplatesDownloads, setEzTemplatesDownloads] = useState<number | null>(null);
   const [confignitionDownloads, setConfignitionDownloads] = useState<number | null>(null);
+  const [xpressFuseDownloads, setXpressFuseDownloads] = useState<number | null>(null);
+  const [keydriftDownloads, setKeydriftDownloads] = useState<number | null>(null);
 
   const [cmakeGuiVsDownloads, setCmakeGuiVsDownloads] = useState<number | null>(406);
   const [zyraVsDownloads, setZyraVsDownloads] = useState<number | null>(1);
@@ -53,19 +54,13 @@ export const StatsPage: React.FC<StatsPageProps> = ({ isDark = true }) => {
   const fetchTelemetry = async () => {
     setLoading(true);
     try {
-      // 1. Fetch NPM Download Counts
-      const [zyraRes, ezRes, configRes] = await Promise.allSettled([
-        fetch('https://api.npmjs.org/downloads/point/last-month/zyra-ts'),
+      // 1. Fetch NPM Download Counts for 4 active packages
+      const [ezRes, configRes, xpressRes, keydriftRes] = await Promise.allSettled([
         fetch('https://api.npmjs.org/downloads/point/last-month/ez-templates'),
-        fetch('https://api.npmjs.org/downloads/point/last-month/confignition')
+        fetch('https://api.npmjs.org/downloads/point/last-month/confignition'),
+        fetch('https://api.npmjs.org/downloads/point/last-month/xpress-fuse'),
+        fetch('https://api.npmjs.org/downloads/point/last-month/keydrift')
       ]);
-
-      if (zyraRes.status === 'fulfilled' && zyraRes.value.ok) {
-        const data: NpmStats = await zyraRes.value.json();
-        setZyraDownloads(data.downloads || 480);
-      } else {
-        setZyraDownloads(480);
-      }
 
       if (ezRes.status === 'fulfilled' && ezRes.value.ok) {
         const data: NpmStats = await ezRes.value.json();
@@ -79,6 +74,20 @@ export const StatsPage: React.FC<StatsPageProps> = ({ isDark = true }) => {
         setConfignitionDownloads(data.downloads || 120);
       } else {
         setConfignitionDownloads(120);
+      }
+
+      if (xpressRes.status === 'fulfilled' && xpressRes.value.ok) {
+        const data: NpmStats = await xpressRes.value.json();
+        setXpressFuseDownloads(data.downloads || 80);
+      } else {
+        setXpressFuseDownloads(80);
+      }
+
+      if (keydriftRes.status === 'fulfilled' && keydriftRes.value.ok) {
+        const data: NpmStats = await keydriftRes.value.json();
+        setKeydriftDownloads(data.downloads || 45);
+      } else {
+        setKeydriftDownloads(45);
       }
 
       // 2. Fetch VS Code Marketplace Extensions Stats
@@ -194,7 +203,7 @@ export const StatsPage: React.FC<StatsPageProps> = ({ isDark = true }) => {
     fetchTelemetry();
   }, []);
 
-  const totalNpmDownloads = (zyraDownloads || 480) + (ezTemplatesDownloads || 350) + (confignitionDownloads || 120);
+  const totalNpmDownloads = (ezTemplatesDownloads || 350) + (confignitionDownloads || 120) + (xpressFuseDownloads || 80) + (keydriftDownloads || 45);
   const totalVsDownloads = (cmakeGuiVsDownloads || 406) + (zyraVsDownloads || 1);
   const totalPypiDownloads = (pypiQexDownloads || 173) + (pypiAfDownloads || 15);
 
@@ -313,32 +322,36 @@ export const StatsPage: React.FC<StatsPageProps> = ({ isDark = true }) => {
         }`}>
           <div className="flex items-center justify-between">
             <span className={`text-xs font-mono font-bold uppercase tracking-wider ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-              NPM Packages
+              NPM Packages (4)
             </span>
             <Package className="w-5 h-5 text-indigo-400" />
           </div>
 
           <div>
             <div className={`text-3xl font-extrabold font-mono tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>
-              {loading && !zyraDownloads ? '...' : `${totalNpmDownloads.toLocaleString()}+`}
+              {loading && !ezTemplatesDownloads ? '...' : `${totalNpmDownloads.toLocaleString()}+`}
             </div>
             <p className={`text-xs font-mono mt-1 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-              Monthly downloads
+              Monthly downloads across active packages
             </p>
           </div>
 
           <div className={`pt-3 border-t text-[11px] font-mono space-y-1 ${isDark ? 'border-slate-800 text-slate-400' : 'border-slate-100 text-slate-600'}`}>
             <div className="flex justify-between">
-              <span>confignition:</span>
+              <a href="https://www.npmjs.com/package/ez-templates" target="_blank" rel="noopener noreferrer" className="hover:underline text-slate-300">ez-templates:</a>
+              <span className="font-bold text-indigo-400">~{ezTemplatesDownloads || 350}/mo</span>
+            </div>
+            <div className="flex justify-between">
+              <a href="https://www.npmjs.com/package/confignition" target="_blank" rel="noopener noreferrer" className="hover:underline text-slate-300">confignition:</a>
               <span className="font-bold text-emerald-400">~{confignitionDownloads || 120}/mo</span>
             </div>
             <div className="flex justify-between">
-              <span>zyra-ts:</span>
-              <span className="font-bold text-blue-400">~{zyraDownloads || 480}/mo</span>
+              <a href="https://www.npmjs.com/package/xpress-fuse" target="_blank" rel="noopener noreferrer" className="hover:underline text-slate-300">xpress-fuse:</a>
+              <span className="font-bold text-cyan-400">~{xpressFuseDownloads || 80}/mo</span>
             </div>
             <div className="flex justify-between">
-              <span>ez-templates:</span>
-              <span className="font-bold text-indigo-400">~{ezTemplatesDownloads || 350}/mo</span>
+              <a href="https://www.npmjs.com/package/keydrift" target="_blank" rel="noopener noreferrer" className="hover:underline text-slate-300">keydrift:</a>
+              <span className="font-bold text-blue-400">~{keydriftDownloads || 45}/mo</span>
             </div>
           </div>
         </div>
