@@ -99,6 +99,7 @@ export const projects: Project[] = [
         links: [
             { label: 'GitHub', url: 'https://github.com/AndreaPallotta/civet' },
         ],
+        image: { src: '/assets/civet.png', alt: 'Civet Logo' },
     },
     {
         id: 'af-toolkit',
