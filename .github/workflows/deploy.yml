@@ -16,7 +16,10 @@ concurrency:
 
 jobs:
     build:
+        name: Build Static Site
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         runs-on: ubuntu-latest
+        timeout-minutes: 10
         steps:
             - uses: actions/checkout@v4
             - uses: actions/setup-node@v4
@@ -30,7 +33,10 @@ jobs:
               with:
                   path: dist
     deploy:
+        name: Deploy to GitHub Pages
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         runs-on: ubuntu-latest
+        timeout-minutes: 10
         needs: build
         environment:
             name: github-pages

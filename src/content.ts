@@ -92,6 +92,15 @@ export const contact = {
 
 export const projects: Project[] = [
     {
+        id: 'vantage',
+        title: 'vantage',
+        summary: 'Centralized multi-platform CI/CD dashboard for GitHub and GitLab (public and self-hosted) with step-level telemetry, multi-namespace switching, and workflow orchestration.',
+        tags: ['Go', 'CI/CD', 'GitHub Actions', 'GitLab CI', 'Dashboard', 'Telemetry', 'CLI', 'Developer Tools'],
+        links: [
+            { label: 'GitHub', url: 'https://github.com/AndreaPallotta/vantage' },
+        ],
+    },
+    {
         id: 'civet',
         title: 'civet',
         summary: 'Fast, deterministic CI/CD pipeline analyzer and assistant CLI for GitLab CI and GitHub Actions with a 30-rule engine, dimensional scoring, and token-dense LLM context generation.',
