@@ -68,7 +68,7 @@ export const education = {
 };
 
 export const skills = {
-    languages: ['Python', 'TypeScript', 'JavaScript', 'Bash', 'PowerShell', 'C++', 'SQL', 'HTML/CSS'],
+    languages: ['Python', 'TypeScript', 'JavaScript', 'Go', 'Rust', 'Bash', 'PowerShell', 'C++', 'SQL', 'HTML/CSS'],
     backend: ['Python (FastAPI, Flask)', 'RESTful APIs', 'Node.js', 'Async/Parallel Scripting', 'Standalone Services'],
     dataTasks: ['Python Data Analysis', 'Pandas & Scripting Pipelines', 'Internal Tooling & Dashboards'],
     frontend: ['React', 'Vite', 'Next.js', 'Tailwind CSS', 'Astro', 'Three.js / WebGL'],
@@ -91,6 +91,15 @@ export const contact = {
 };
 
 export const projects: Project[] = [
+    {
+        id: 'civet',
+        title: 'civet',
+        summary: 'Fast, deterministic CI/CD pipeline analyzer and assistant CLI for GitLab CI and GitHub Actions with a 30-rule engine, dimensional scoring, and token-dense LLM context generation.',
+        tags: ['Go', 'CI/CD', 'GitLab CI', 'GitHub Actions', 'CLI', 'Rules Engine', 'Developer Tools'],
+        links: [
+            { label: 'GitHub', url: 'https://github.com/AndreaPallotta/civet' },
+        ],
+    },
     {
         id: 'af-toolkit',
         title: 'af-toolkit',
